@@ -1,0 +1,18 @@
+# system configuration
+system:
+  env: develop
+  addr: 9092
+
+# zap configuration
+zap:
+  level: info
+  format: console
+  prefix: '[backend-pack]'
+  director: log
+  show-line: true
+  encode-level: LowercaseColorLevelEncoder
+  stacktrace-key: stacktrace
+  log-in-console: true
+
+pack:
+  path: "/Users/mac/Code/tutorials"

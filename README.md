@@ -10,16 +10,16 @@ cd backend-pack
 go build -o backend-pack
 ```
 ## 配置
-```bash
-cp ./config/config.demo.yaml ./config/config.yaml
-vi ./config/config.yaml
-```
 克隆 tutorials 项目
 ```bash
 git clone https://github.com/decert-me/tutorials.git
 cd tutorials
 git checkout feat-backend
 yarn -i
+```
+```bash
+cp ./config/config.demo.yaml ./config/config.yaml
+vi ./config/config.yaml
 ```
 配置 tutorials 项目路径
 ```shell

@@ -141,7 +141,7 @@ func PackRequest(tutorial model.Tutorial) (res response.PackResponse, err error)
 	fileName := UUID.String() + ".zip"
 	fmt.Println("packPath", packPath)
 	fmt.Println("res", path.Join(resourcePath, fileName))
-	err = utils.ZipDir(packPath+"/"+tutorial.CatalogueName, path.Join(resourcePath, fileName))
+	err = utils.ZipDir(packPath, path.Join(resourcePath, fileName))
 	if err != nil {
 		res.Message = "压缩文件失败"
 		return res, err

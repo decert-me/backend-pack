@@ -6,7 +6,6 @@ import (
 	"backend-pack/internal/app/model/response"
 	"backend-pack/internal/app/utils"
 	"encoding/json"
-	"errors"
 	"fmt"
 	uuid "github.com/satori/go.uuid"
 	"github.com/tidwall/gjson"
@@ -28,17 +27,20 @@ func PackRequest(tutorial model.Tutorial) (res response.PackResponse, err error)
 	// 清空打包目录
 	err = os.RemoveAll(packPath)
 	if err != nil {
+		res.Message = "清空打包目录失败"
 		return res, err
 	}
 	// 创建打包目录
 	err = os.MkdirAll(packPath, os.ModePerm)
 	if err != nil {
+		res.Message = "创建资源目录失败"
 		return res, err
 	}
 	// 如果目录不存在则创建
 	if exist, _ := utils.PathExists(resourcePath); !exist {
 		err = os.MkdirAll(resourcePath, os.ModePerm)
 		if err != nil {
+			res.Message = "创建资源目录失败"
 			return res, err
 		}
 	}
@@ -47,12 +49,14 @@ func PackRequest(tutorial model.Tutorial) (res response.PackResponse, err error)
 	jsonData, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		fmt.Println("Error:", err)
+		res.Message = "JSON生成失败"
 		return res, err
 	}
 	// 将JSON数据写入文件
 	file, err := os.Create(path.Join(global.CONFIG.Pack.Path, "tutorials.json"))
 	if err != nil {
 		fmt.Println("Error:", err)
+		res.Message = "JSON写入失败"
 		return res, err
 	}
 	defer file.Close()
@@ -60,6 +64,7 @@ func PackRequest(tutorial model.Tutorial) (res response.PackResponse, err error)
 	_, err = file.Write(jsonData)
 	if err != nil {
 		fmt.Println("Error:", err)
+		res.Message = "JSON写入失败"
 		return res, err
 	}
 	// npm run build -- blockchain-basic
@@ -68,6 +73,7 @@ func PackRequest(tutorial model.Tutorial) (res response.PackResponse, err error)
 	stdoutRes, stdoutErr, err := execCommand(global.CONFIG.Pack.Path, "npm", args...)
 	if err != nil {
 		fmt.Println(err)
+		res.Message = "命令执行失败"
 		return res, err
 	}
 	var packLog strings.Builder
@@ -108,7 +114,7 @@ func PackRequest(tutorial model.Tutorial) (res response.PackResponse, err error)
 	if tutorial.PackStatus == 2 && status == 3 {
 		// 写入日志
 		res.Tutorial = model.Tutorial{PackLog: packLog.String()}
-		return res, errors.New("打包失败")
+		return res, nil
 	}
 	// 将结果写入
 	res.Tutorial = model.Tutorial{StartPage: startPage, PackStatus: status, PackLog: packLog.String()}
@@ -117,6 +123,7 @@ func PackRequest(tutorial model.Tutorial) (res response.PackResponse, err error)
 	// 读取目录下文件夹
 	entries, err := os.ReadDir(packPath)
 	if err != nil {
+		res.Message = "读取目录失败"
 		return res, err
 	}
 	var dirName string
@@ -136,6 +143,7 @@ func PackRequest(tutorial model.Tutorial) (res response.PackResponse, err error)
 	fmt.Println("res", path.Join(resourcePath, fileName))
 	err = utils.ZipDir(packPath+"/"+tutorial.CatalogueName, path.Join(resourcePath, fileName))
 	if err != nil {
+		res.Message = "压缩文件失败"
 		return res, err
 	}
 	res.FileName = fileName
@@ -145,5 +153,5 @@ func PackRequest(tutorial model.Tutorial) (res response.PackResponse, err error)
 	//if global.CONFIG.Sync.Enable && global.CONFIG.Sync.Type == 0 && global.CONFIG.Sync.Server != "" {
 	//
 	//}
-	return res, err
+	return res, nil
 }

@@ -22,3 +22,4 @@ config/config.yaml
 config/config.docker.yaml
 
 backend-pack
+backend-pack-local

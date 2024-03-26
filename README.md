@@ -32,3 +32,29 @@ pack:
 # 主程序
 ./backend-pack
 ```
+
+## 配置说明
+
+### 运行端口配置
+
+配置项：
+```yaml
+# system configuration
+system:
+  env: develop
+  addr: 9092
+```
+env：运行环境，可选值为 develop、test、production
+
+addr：运行端口
+
+### 打包配置
+
+配置项：
+
+```yaml
+pack:
+  path: "/Users/mac/Code/tutorials"
+```
+
+path: [tutorials项目本地路径](https://github.com/decert-me/tutorials)

@@ -147,11 +147,5 @@ func PackRequest(tutorial model.Tutorial) (res response.PackResponse, err error)
 		return res, err
 	}
 	res.FileName = fileName
-	// Build completed successfully
-	// Error running build command:
-	// 同步到远程服务器
-	//if global.CONFIG.Sync.Enable && global.CONFIG.Sync.Type == 0 && global.CONFIG.Sync.Server != "" {
-	//
-	//}
 	return res, nil
 }
